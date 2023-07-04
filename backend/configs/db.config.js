@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
+require('dotenv').config(); // Comment: Loads environment variables from a .env file if present.
 
-
-const connectToMongo = () =>
+const connectToMongo = async () => 
 {
-    mongoose.connect(process.env.DBURI, () =>
+    try
     {
-        console.log("Connected to mongo successfully");
-    });
-}
+        await mongoose.connect(process.env.DBURI);
+        console.log("Connected to MongoDB successfully");
+    }
+    catch(error)
+    {
+        console.error("Failed to connect to MongoDB:", error);
+    }
+};
 
 module.exports = connectToMongo;

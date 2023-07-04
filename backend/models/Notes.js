@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
-const NotesSchema = new Schema({
-    tule : {
+const NotesSchema = new Schema
+({
+    title : 
+    {
         type : String,
         required :true
     },
