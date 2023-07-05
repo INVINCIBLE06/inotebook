@@ -2,6 +2,13 @@ const mongoose = require('mongoose');
 
 const NotesSchema = new Schema
 ({
+    id :
+    {
+        type : String,
+        required : true,
+        autoIncrement : true,
+        primaryKey: true  
+    },
     title : 
     {
         type : String,
@@ -18,10 +25,19 @@ const NotesSchema = new Schema
         type : String,
         required : true
     },
-    date :{
+    created_At :
+    {
+        type : Date,
+        default : Date.now
+    },
+    updated_At :
+    {
         type : Date,
         default : Date.now
     }
+
+
+    
 });
 
 
