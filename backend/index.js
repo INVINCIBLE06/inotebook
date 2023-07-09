@@ -4,15 +4,9 @@ const app = express();
 
 connectToMongo();
 
+app.use(express.json())
 
-// require('../backend/routes/auth')(app);
-
-app.use('/', require('../backend/routes/auth'))
-
-
-
-
-
+app.use('/auth', require('../backend/routes/auth'))
 
 
 app.get('/', (req, res) =>
@@ -24,3 +18,9 @@ app.listen(process.env.PORT, () =>
 {
   console.log(`App listening on port : ${process.env.PORT}`)
 })
+
+
+/**
+ * There is a term callled rainbow table. In which people store the most common password along
+ * with there hashed value for years
+ */

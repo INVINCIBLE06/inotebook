@@ -1,8 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                    //                                                                                   //
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 const User = require('../models/User');
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken')
 
+/**
+ * The below function is for creating new users.
+ */
 exports.signup = async (req, res) =>
 {
+    // Add the req.body data in userObj object
     const userObj = 
     {
         name : req.body.name,
@@ -15,8 +29,10 @@ exports.signup = async (req, res) =>
 
     try
     {
+        // The below line will be used for creating the new user
         const userCreated = await User.create(userObj);
 
+        // The response variable will have the data. Which will be displayed when the signup is successfully done
         const response = 
         {
             name : userCreated.name,
@@ -26,7 +42,8 @@ exports.signup = async (req, res) =>
             phone_no : userCreated.phone_no,
             date_of_birth : userCreated.date_of_birth,
         }
-        res.status(201).send(response);
+        console.log("User added"),
+        res.status(201).send(response); // Response line
 
     }
     catch(err)
@@ -35,10 +52,6 @@ exports.signup = async (req, res) =>
         res.status(500).send
         ({
             message : "Some internal server error"
-        })
+        });
     }
-    
-
-
-
 };

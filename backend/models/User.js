@@ -5,8 +5,7 @@ const UserSchema = new Schema
 ({
     id :
     {
-        type : String,
-        required : true,
+        type : Number,
         autoIncrement : true,
         primaryKey: true      
     },
@@ -38,7 +37,7 @@ const UserSchema = new Schema
         required : true,
         unique : true 
     },
-    dob :
+    date_of_birth :
     {
         type : String,
         required : true,
@@ -67,7 +66,7 @@ const UserSchema = new Schema
 });
 
 const User = mongoose.model('user', UserSchema)
-User.createIndexes();   
+// User.createIndexes();   
 module.exports = User;  
 
 
