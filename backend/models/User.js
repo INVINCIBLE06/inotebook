@@ -3,16 +3,10 @@ const { Schema } = mongoose
 
 const UserSchema = new Schema
 ({
-    id :
-    {
-        type : Number,
-        autoIncrement : true,
-        primaryKey: true      
-    },
     name : 
     { 
         type : String,
-        required :true
+        required :true 
     },
     email :
     {
@@ -61,12 +55,9 @@ const UserSchema = new Schema
         type : Date,
         default : Date.now
     }
-
-
 });
 
-const User = mongoose.model('user', UserSchema)
-// User.createIndexes();   
-module.exports = User;  
+const User = mongoose.model('user', UserSchema);
+module.exports = User;
 
 

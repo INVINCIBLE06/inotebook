@@ -1,13 +1,16 @@
 const connectToMongo = require('../backend/configs/db.config');
 const express = require('express');
 const app = express();
-
 connectToMongo();
+
 
 app.use(express.json())
 
-app.use('/auth', require('../backend/routes/auth'))
+// app.use('/auth', require('../backend/routes/auth'));
+app.use('/notes', require('./routes/notes'));
 
+
+// require('../backend/routes/auth')(app);
 
 app.get('/', (req, res) =>
 {
@@ -21,6 +24,6 @@ app.listen(process.env.PORT, () =>
 
 
 /**
- * There is a term callled rainbow table. In which people store the most common password along
+ * There is a term called rainbow table. In which people store the most common password along
  * with there hashed value for years
  */

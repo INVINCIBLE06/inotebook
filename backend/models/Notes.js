@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose
 
 const NotesSchema = new Schema
 ({
-    id :
+    user : 
     {
-        type : String,
-        required : true,
-        autoIncrement : true,
-        primaryKey: true  
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'user'
     },
     title : 
     {
@@ -34,10 +33,7 @@ const NotesSchema = new Schema
     {
         type : Date,
         default : Date.now
-    }
-
-
-    
+    }    
 });
 
 

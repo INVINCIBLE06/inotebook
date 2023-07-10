@@ -1,6 +1,4 @@
-const jwtSign = () => 
+module.exports =
 {
     secret : "SaurabhGoodBoy"
 };
-
-module.exports = jwtSign;

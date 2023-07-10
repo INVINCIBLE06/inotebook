@@ -42,7 +42,7 @@ exports.checkBodyPresentSignup = (req, res, next) =>
         });
     }
     
-    if(!date_of_birth)
+    if(!req.body.date_of_birth)
     {
         return res.status(400).send
         ({
@@ -81,15 +81,15 @@ const isvalidEmail = (email) =>
         const domainParts = domain.split('.'); // split domain name by '.' separator
         // console.log(domainParts); // output: ['gmail', 'com', 'com']
         if(domainParts[1] === domainParts[2])
-            {
-                // console.log('Both the domain names are same. It is not a valid email');
-                return false
-            }
-            else
-            {
-                // console.log('Valid Email');
-                return true;
-            }
+        {
+            // console.log('Both the domain names are same. It is not a valid email');
+            return false
+        }
+        else
+        {
+            // console.log('Valid Email');
+            return true;
+        }
     } 
     else
     {

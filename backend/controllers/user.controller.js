@@ -9,8 +9,8 @@
 
 const User = require('../models/User');
 const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken')
-
+const jwt = require('jsonwebtoken');
+const authConfig = require('../configs/auth.config');
 /**
  * The below function is for creating new users.
  */
@@ -43,8 +43,7 @@ exports.signup = async (req, res) =>
             date_of_birth : userCreated.date_of_birth,
         }
         console.log("User added"),
-        res.status(201).send(response); // Response line
-
+        res.status(201).send({message : "User Added Successfully"}); // Response line
     }
     catch(err)
     {
@@ -55,3 +54,76 @@ exports.signup = async (req, res) =>
         });
     }
 };
+
+/**
+ * The below function is sign in of the user
+ */
+
+exports.login = async (req, res) =>
+{
+    const { username, email, phone_no, password } = req.body;
+    console.log(req.body);
+    let condition = null;
+    if(username)
+    {
+        condition = { username: username };
+    }
+    else if(email)
+    {
+        condition = { email: email };
+    }
+    else if(phone_no)
+    {
+        condition = { phone_no : phone_no };
+    }
+    else
+    {
+        return res.status(400).send
+        ({ 
+            message: "Invalid login credentials" 
+        });
+    }
+
+    // console.log(condition);
+
+    const user = await User.findOne({ username : req.body.username });
+    // const user = await User.findOne({condition});
+
+    if(!user)
+    {
+        return res.status(404).send
+        ({
+            message : "User Not found"
+        });
+    }
+        
+    var isValidPassword = bcrypt.compareSync(password, user.password);
+     /**
+     * Create the JWT toekn
+     */
+    console.log(user._id);
+    console.log(authConfig.secret);
+
+     const token = jwt.sign
+     ({
+        id : user.userId},
+        authConfig.secret,{
+        expiresIn : 36400 // This is in milliseconds
+    });
+
+    if(!isValidPassword)
+    {
+        return res.status(401).send 
+        ({
+            message : "Invalid Password"
+        });
+    }
+    else
+    {
+        return res.status(200).send 
+        ({
+            message : "Login Successfully Done",
+            token : token
+        });
+    }
+}  
