@@ -101,15 +101,15 @@ exports.login = async (req, res) =>
      /**
      * Create the JWT toekn
      */
-    console.log(user._id);
-    console.log(authConfig.secret);
+    // console.log("Here", user._id);
 
-     const token = jwt.sign
-     ({
-        id : user.userId},
-        authConfig.secret,{
-        expiresIn : 36400 // This is in milliseconds
-    });
+    const data = {
+        user : {
+            id : user.id
+        }
+    }
+
+    const token = jwt.sign(data, authConfig.secret)
 
     if(!isValidPassword)
     {

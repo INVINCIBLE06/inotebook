@@ -6,4 +6,6 @@ const fetchUser = require('../middlewares/fetch.user');
 
 router.get('/fetchAll', fetchUser.fetchUserDetail, notesController.getAllNotes);
 
+// router.post('/AddNote'. notesController.getAllNotes);
+
 module.exports = router;

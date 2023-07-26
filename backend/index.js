@@ -6,7 +6,7 @@ connectToMongo();
 
 app.use(express.json())
 
-// app.use('/auth', require('../backend/routes/auth'));
+app.use('/auth', require('../backend/routes/auth'));
 app.use('/notes', require('./routes/notes'));
 
 

@@ -2,13 +2,12 @@ const Notes = require('../models/Notes');
 const { login } = require('./user.controller');
 
 
-exports.getAllNotes = async (user, req, res) =>
+exports.getAllNotes = async (user, req, res, next) =>
 {
-    console.log(user);
     try 
     {
-        const notes = await Notes.find({ user: req.user.id });
-        res.json(notes)        
+        const notes = await Notes.find({ user : req.user.id });
+        res.json(notes); 
     }
     catch (error)
     {
