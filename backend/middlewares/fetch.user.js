@@ -14,7 +14,7 @@ exports.fetchUserDetail = async (req, res, next) =>
     try
     {
         const data = jwt.verify(token, authConfig.secret);
-        // console.log(data);
+        console.log(data);
         next(data.user.id);
     }
     catch(error)

@@ -1,13 +1,12 @@
-const Notes = require('../models/Notes');
-const { login } = require('./user.controller');
-
+const Note = require('../models/Notes');
 
 exports.getAllNotes = async (user, req, res, next) =>
 {
     try 
     {
         // console.log(user);
-        const notes = await Notes.find({ user : user });
+        const notes = await Note.find({ user : user });
+        // console.log(notes);
         if(notes.length == 0)
         {
             console.log(`There are no notes available for this token now`);
@@ -38,33 +37,36 @@ exports.getAllNotes = async (user, req, res, next) =>
     }
 };
 
-exports.AddNewNote = async (req, res, next) =>
+exports.AddNewNote = async (userId, req, res, next) =>
 {
     const reqObj = 
     {
+        user : userId,
         title : req.body.title,
         description : req.body.description,
         tag : req.body.tag
     }  
     try
     {
+        // console.log(userId);
+        // console.log(reqObj);
         // The below line will be used for creating the new note
-        const noteCreated = await Notes.create(reqObj);
-
+        const noteCreated = await Note.create(reqObj);
         // The response variable will have the data. Which will be displayed when the signup is successfully done
-
+        // console.log(`Note created: `, noteCreated);
         const response = 
         {
+            user : noteCreated.user,
             title : noteCreated.title,
             description : noteCreated.description,
             tag : noteCreated.tag,
             created_at : noteCreated.created_At
         };
 
-        console.log('Note Added');
+        // console.log('Note Added');
         res.status(201).send
         ({
-            message : "User Added Successfully",
+            message : "Note Added Successfully",
             notes : response 
         }); // Response line
     }
@@ -87,7 +89,7 @@ exports.UpdateExistingRoute = async (req, res, next) =>
     try
     {
         // The below line will be used for creating the new note
-        const noteCreated = await Notes.create(reqObj);
+        const noteCreated = await Note.create(reqObj);
 
         // The response variable will have the data. Which will be displayed when the signup is successfully done
 
@@ -99,7 +101,7 @@ exports.UpdateExistingRoute = async (req, res, next) =>
             created_at : noteCreated.created_At
         };
 
-        console.log('Note Added');
+        // console.log('Note Added');
         res.status(201).send
         ({
             message : "User Added Successfully",

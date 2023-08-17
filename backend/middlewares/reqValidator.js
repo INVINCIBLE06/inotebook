@@ -1,57 +1,5 @@
+const { login } = require('../controllers/user.controller');
 const User = require('../models/User')
-
-exports.checkBodyPresentSignup = (req, res, next) =>
-{
-    if(!req.body.name)
-    {
-        return res.status(400).send
-        ({
-            message : "Failed ! Name is not provided"
-        });
-    }
-
-    if(!req.body.email)
-    {
-        return res.status(400).send
-        ({
-            message : "Failed ! Email is not provided"
-        });
-    }
-
-    if(!req.body.password)
-    {
-        return res.status(400).send
-        ({
-            message : "Failed ! Password is not provided"
-        });
-    }
-
-    if(!req.body.username)
-    {
-        return res.status(400).send
-        ({
-            message : "Failed ! User name is not provided"
-        });
-    }
-
-    if(!req.body.phone_no)
-    {
-        return res.status(400).send
-        ({
-            message : "Failed ! phone_no number is not provided"
-        });
-    }
-    
-    if(!req.body.date_of_birth)
-    {
-        return res.status(400).send
-        ({
-            message : "Failed ! Date of birth number is not provided"
-        });
-    }
-
-    next();
-};
 
 exports.emailvalidation = async (req, res, next) => 
 {
@@ -176,4 +124,97 @@ exports.ValidateSignUpRequestBody = async (req, res, next) =>
     }
 };
 
+exports.checkValueEntered = (feildName, messageName) => (req, res, next) =>
+{
+    if(!feildName)
+    {
+        console.log(`${feildName} is not entered`);
+        return res.json
+        ({
+            code : 400,
+            status : false,
+            message : `${messageName} is not entered`
+        })
+    }
+    else
+    {
+        next();
+    }
+}
 
+exports.checkSignupBodyPresent = (req, res, next) =>
+{
+    this.checkValueEntered(req.body.name, 'Name')(req, res, next);
+    this.checkValueEntered(req.body.email, 'Email')(req, res, next);
+    this.checkValueEntered(req.body.username, 'Username')(req, res, next);~~
+    this.checkValueEntered(req.body.password, 'Password')(req, res, next);
+    this.checkValueEntered(req.body.phone_no, 'Phone number')(req, res, next);
+    this.checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
+    next();
+};
+
+exports.noteBodyValidator = async (req, res, next) =>
+{
+    this.checkValueEntered(req.body.title, 'Title')(req, res, next);
+    this.checkValueEntered(req.body.tag, 'Tag')(req, res, next);
+    this.checkValueEntered(req.body.description, 'Description')(req, res, next);
+    next();
+};
+
+// exports.checkDuplicateValue = (feild, value) => async (req, res, next) =>
+// {
+//     console.log(`Came`);
+//     console.log({ [feild]: value });
+//     let checkValue = await User.findOne({[feild] : value});
+//     console.log('Check Value: ', checkValue);
+
+//     if(checkValue.length != 0)
+//     {
+//         res.status(400).send
+//         ({
+//             code : 400,
+//             status : false,
+//             message : `${feild} is already present.`
+//         });
+//     }
+//     else
+//     {
+//         next();
+//     }
+// };
+
+exports.checkDuplicateValue = (field, value) => async (req, res, next) => {
+    try {
+        console.log('Came');
+        console.log({ [field]: value });
+
+        let checkValue = await User.findOne({ [field]: value });
+        console.log('Check Value: ', checkValue);
+
+        if (checkValue) {
+            return res.status(400).json({
+                code: 400,
+                status: false,
+                message: `${field} is already present.`
+            });
+        } else {
+            next();
+        }
+    } catch (error) {
+        console.error('Error:', error); // Log the error for debugging
+        return res.status(500).json({
+            code: 500,
+            status: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+
+exports.checkDuplicateEntryWhileSignup = async (req, res, next) =>
+{
+    this.checkDuplicateValue('email', req.body.email)(req, res, next);
+    this.checkDuplicateValue('username', req.body.username)(req, res, next);
+    this.checkDuplicateValue('phone_no', req.body.phone_no)(req, res, next);
+    next();
+};

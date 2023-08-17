@@ -4,9 +4,15 @@ const authController = require('../controllers/user.controller');
 const verifyBody =  require('../middlewares/reqValidator');
 
 
-router.post('/signup', verifyBody.checkBodyPresentSignup, verifyBody.ValidateSignUpRequestBody, authController.signup);
+router.post('/signup',
+verifyBody.checkSignupBodyPresent,
+verifyBody.ValidateSignUpRequestBody,
+verifyBody.checkDuplicateEntryWhileSignup,
+authController.signup
+);
 
-router.post('/signin', authController.login);
+router.post('/signin', 
+authController.login);
 
 
 

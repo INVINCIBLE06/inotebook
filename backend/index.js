@@ -3,11 +3,11 @@ const express = require('express');
 const app = express();
 connectToMongo();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Use router.use() instead of express.use()
 
-app.use(express.json())
-
-app.use('/auth', require('../backend/routes/auth'));
-app.use('/notes', require('./routes/notes'));
+app.use('/auth', require('./routes/auth.route'));
+app.use('/notes', require('./routes/notes.route'));
 
 
 // require('../backend/routes/auth')(app);

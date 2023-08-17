@@ -6,7 +6,7 @@ const fetchUser = require('../middlewares/fetch.user');
 
 router.get('/fetchAll', fetchUser.fetchUserDetail, notesController.getAllNotes);
 
-router.post('/AddNote', notesController.AddNewNote);
+router.post('/AddNote', fetchUser.fetchUserDetail, notesController.AddNewNote);
 
 router.put ('/UpdateNote', notesController.UpdateExistingRoute)
 
