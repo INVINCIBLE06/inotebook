@@ -78,35 +78,33 @@ exports.AddNewNote = async (userId, req, res, next) =>
 };
 
 
-exports.UpdateExistingRoute = async (req, res, next) =>
-{
-    const reqObj = 
-    {
-        title : req.body.title,
-        description : req.body.description,
-        tag : req.body.tag
-    }  
+exports.UpdateExistingNote = async (userId, req, res, next) =>
+{  
     try
     {
+        // console.log(req.body.id);
         // The below line will be used for creating the new note
-        const noteCreated = await Note.create(reqObj);
+        const notePresent = await Note.findOne({ _id : req.body.id});
 
+        // console.log(`Note Present: `, notePresent);
         // The response variable will have the data. Which will be displayed when the signup is successfully done
-
-        const response = 
+        if(notePresent.length = 0)
         {
-            title : noteCreated.title,
-            description : noteCreated.description,
-            tag : noteCreated.tag,
-            created_at : noteCreated.created_At
-        };
-
-        // console.log('Note Added');
-        res.status(201).send
-        ({
-            message : "User Added Successfully",
-            notes : response 
-        }); // Response line
+           res.send
+           ({
+                code : 400,
+                status : false,
+                message : `No note present with the id`        
+           }); 
+        }
+        else
+        {
+            notePresent.title = req.body.title != undefined ? req.body.title : notePresent.title;
+            notePresent.description = req.body.description != undefined ? req.body.description : notePresent.description;
+            notePresent.tag = req.body.tag != undefined ? req.body.tag : notePresent.tag
+            const updateNote = await notePresent.save();
+            res.status(200).send(updateNote);
+        }
     }
     catch (error)
     {
@@ -114,3 +112,40 @@ exports.UpdateExistingRoute = async (req, res, next) =>
         res.status(500).send("Internal Server Error While Updating The Existing Note");   
     }
 };
+
+
+exports.deleteNote = async (userId, req, res, next) =>
+{
+    try 
+    {
+        // console.log(req.body.id);
+        const notePresent = await Note.findOne({ _id : req.body.id});
+        // console.log(`Note details at the time of delete: `, notePresent);
+        if(!notePresent)
+        {
+           res.send
+           ({
+                code : 400,
+                status : false,
+                message : `No note present with the id`        
+           }); 
+        }
+        else
+        {
+            let checkNote = await notePresent.deleteOne();
+            
+            res.send
+            ({
+                code : 200,
+                status : false,
+                message : "Note is successfully deleted"
+            })
+        }
+        
+    }
+    catch (error)
+    {
+        console.error(error.message);
+        res.status(500).send("Internal server error while deleting the node");        
+    }
+}

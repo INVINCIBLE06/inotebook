@@ -8,6 +8,8 @@ router.get('/fetchAll', fetchUser.fetchUserDetail, notesController.getAllNotes);
 
 router.post('/AddNote', fetchUser.fetchUserDetail, notesController.AddNewNote);
 
-router.put ('/UpdateNote', notesController.UpdateExistingRoute)
+router.put ('/UpdateNote', fetchUser.fetchUserDetail, notesController.UpdateExistingNote)
+
+router.delete('/deleteNote', fetchUser.fetchUserDetail, notesController.deleteNote)
 
 module.exports = router;
