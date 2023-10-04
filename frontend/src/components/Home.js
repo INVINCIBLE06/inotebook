@@ -1,11 +1,9 @@
-import React from 'react'
+import Notes from "../components/Notes";
 
-const Home = () => {
+export const Home = () => {
   return (
-    <div>This is Home</div>
-  )
-}
-
-export default Home;
-
-
+    <div>
+      <Notes />
+    </div>
+  );
+};

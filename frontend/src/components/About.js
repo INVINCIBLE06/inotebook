@@ -1,11 +1,10 @@
-import React, {useContext} from 'react'
-import noteContext from '../context/notes/noteContext'
+import React, { useContext, useEffect } from "react";
 
-const About = () => {
-    const a = useContext(noteContext)
+export const About = () => {
+
   return (
-    <div>This is About {a.name} and he is in the class 5B</div>
-  )
-}
-
-export default About;
+    <div>
+      This is about
+    </div>
+  );
+};
