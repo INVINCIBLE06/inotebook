@@ -26,28 +26,24 @@ const isvalidEmail = (email) =>
     {
         const domain = email.split('@')[1]; // get domain name after '@' symbol
         const domainParts = domain.split('.'); // split domain name by '.' separator
-        // console.log(domainParts); // output: ['gmail', 'com', 'com']
         if(domainParts[1] === domainParts[2])
         {
-            // console.log('Both the domain names are same. It is not a valid email');
             return false
         }
         else
         {
-            // console.log('Valid Email');
             return true;
         }
     } 
     else
     {
-        // console.log('Invalid Email');
         return false
     }
 };
 
 const isValidDateOfBirth = (DOB) =>  
 {
-    return DOB.match(/^(?:19|20)\d{2}[/-](?:0[1-9]|1[0-2])[/-](?:0[1-9]|[12][0-9]|3[01])$/);
+    return /^(?:19|20)\d{2}[/-](?:0[1-9]|1[0-2])[/-](?:0[1-9]|[12][0-9]|3[01])$/.test(DOB);
 };
 
 const isValidPassword = (password) => 
@@ -57,12 +53,12 @@ const isValidPassword = (password) =>
 
 const isValidContact_No = (Contact_No) => 
 {
-    return Contact_No.match(/^(\+?91|0)?[6-9]\d{9}$/);
+    return /^[6-9]\d{9}$/.test(Contact_No);
 }
 
 const isValidUsername = (username) => 
 {
-    return username.match(/^[a-zA-Z0-9]{8,12}$/);
+    return /^[a-zA-Z0-9]{8,12}$/.test(username);
 }
 
 exports.ValidateSignUpRequestBody = async (req, res, next) =>
@@ -86,6 +82,7 @@ exports.ValidateSignUpRequestBody = async (req, res, next) =>
         }
         else if(isValidContact_No(req.body.phone_no) != true)
         {
+            console.log('HERE: ', isValidContact_No(req.body.phone_no));
             // console.log(!!isValidContact_No(req.body.contact_no)); 
             return res.status(400).send
             ({
@@ -125,65 +122,91 @@ exports.ValidateSignUpRequestBody = async (req, res, next) =>
 
 exports.checkValueEntered = (feildName, messageName) => (req, res, next) =>
 {
-    if(!feildName)
+    try
     {
-        return res.json
-        ({
-            code : 400,
-            status : false,
-            message : `${messageName} is not entered`
-        })
+        return new Promise((resolve, reject) =>
+        {
+            if(!feildName)
+            {
+                return res.json
+                ({
+                    code : 400,
+                    status : false,
+                    message : `${messageName} is not entered`
+                })
+            }
+            else
+            {
+                resolve();
+            }
+        });        
     }
-    else
+    catch (error)
     {
-        next();
+        console.log("Internal server error from the checkValueEntered function: ");
+        return res.status(500).send
+        ({
+            message: `Internal Server Error`
+        });         
     }
 }
 
 exports.checkSignupBodyPresent = (req, res, next) =>
 {
-    this.checkValueEntered(req.body.name, 'Name')(req, res, next);
-    this.checkValueEntered(req.body.email, 'Email')(req, res, next);
-    this.checkValueEntered(req.body.username, 'Username')(req, res, next);~~
-    this.checkValueEntered(req.body.password, 'Password')(req, res, next);
-    this.checkValueEntered(req.body.phone_no, 'Phone number')(req, res, next);
-    this.checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
-    next();
+    try
+    {
+        return new Promise((resolve, reject) =>
+        {
+            this.checkValueEntered(req.body.name, 'Name')(req, res, next);
+            this.checkValueEntered(req.body.email, 'Email')(req, res, next);
+            this.checkValueEntered(req.body.username, 'Username')(req, res, next);~~
+            this.checkValueEntered(req.body.password, 'Password')(req, res, next);
+            this.checkValueEntered(req.body.phone_no, 'Phone number')(req, res, next);
+            this.checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
+            next();
+        });        
+    }
+    catch (error)
+    {
+        console.log('Internal Server Error from the "checkSignupBodyPresent" function.', error);
+        return res.status(500).send
+        ({
+            message: `Internal Server Error`
+        });        
+    }
 };
 
 exports.noteBodyValidator = async (req, res, next) =>
 {
-    this.checkValueEntered(req.body.title, 'Title')(req, res, next);
-    this.checkValueEntered(req.body.tag, 'Tag')(req, res, next);
-    this.checkValueEntered(req.body.description, 'Description')(req, res, next);
-    next();
-};
-
-exports.checkDuplicateValue = (field, value) => async (req, res, next) => {
-    try
+    try 
     {
-        console.log(await User.findOne({ [field]: value }));
-
-        let checkValue = await User.findOne({ [field]: value });
-        console.log('Check Value: ', checkValue);
-
-        if (checkValue)
-        {
-            return res.status(400).json
-            ({
-                code: 400,
-                status: false,
-                message: `${field} is already present.`
-            });
-        } 
-        else
-        {
-            next();
-        }
+        await this.checkValueEntered(req.body.title, 'Title')(req, res, next);
+        await this.checkValueEntered(req.body.tag, 'Tag')(req, res, next);
+        await this.checkValueEntered(req.body.description, 'Description')(req, res, next);
+        next();
     }
     catch (error)
     {
-        console.error('Error:', error); // Log the error for debugging
+        console.log('Internal Server Error from the "noteBodyValidator" function.', error);
+        return res.status(500).send
+        ({
+            message: `Internal Server Error`
+        }); 
+    }
+};
+
+exports.checkDuplicateEntryWhileSignup = async (req, res, next) => 
+{
+    try
+    {
+        await this.checkDuplicateValue('email', req.body.email) (req, res, next),
+        await this.checkDuplicateValue('username', req.body.username)(req, res, next),
+        await this.checkDuplicateValue('phone_no', req.body.phone_no)(req, res, next),
+        next();
+    }
+    catch (error)
+    {
+        console.log('Internal Server Error from the "checkDuplicateEntryWhileSignup" function.', error);
         return res.status(500).json
         ({
             code: 500,
@@ -194,10 +217,37 @@ exports.checkDuplicateValue = (field, value) => async (req, res, next) => {
 };
 
 
-exports.checkDuplicateEntryWhileSignup = async (req, res, next) =>
+
+
+exports.checkDuplicateValue = (field, value) => async (req, res, next) =>
 {
-    this.checkDuplicateValue('email', req.body.email)(req, res, next);
-    this.checkDuplicateValue('username', req.body.username)(req, res, next);
-    this.checkDuplicateValue('phone_no', req.body.phone_no)(req, res, next);
-    next();
+    try
+    {
+        return new Promise(async (resolve, reject) =>
+        {
+            const checkValue = await User.findOne({ [field]: value });
+            if (checkValue)
+            {
+                return res.status(400).json
+                ({
+                    code: 400,
+                    status: false,
+                    message: `${field} is already present.`
+                });
+            }
+            else
+            {
+                resolve();
+            }
+        });
+    }
+    catch (error)
+    {
+        return res.status(500).json
+        ({
+            code: 500,
+            status: false,
+            message: 'Internal Server Error'
+        });
+    }
 };

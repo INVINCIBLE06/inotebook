@@ -3,18 +3,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
 const User = require('../models/User');
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const authConfig = require('../configs/auth.config');
+
+
 /**
  * The below function is for creating new users.
  */
-exports.signup = async (req, res) =>
+exports.signup = async (req, res, next) =>
 {
     // Add the req.body data in userObj object
     const userObj = 
@@ -41,7 +39,6 @@ exports.signup = async (req, res) =>
             phone_no : userCreated.phone_no,
             date_of_birth : userCreated.date_of_birth,
         }
-        console.log("User added"),
         res.status(201).send
         ({
             message : "User Added Successfully"
