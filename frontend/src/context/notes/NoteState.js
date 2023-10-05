@@ -1,37 +1,10 @@
-// import { useState } from "react";
-// import NoteContext from "./noteContext";
-
-// const NoteState = (props) =>
-// {
-//     const s1 = {
-//         "name" : "Saurabh Pande",
-//         "class" : "5B"
-//     }
-
-//     const [state, setState] = useState(s1);
-//     const update = () =>
-//     {
-//         setTimeout = (() =>{
-//             setState({
-//                 "name" : "Xi Jinping",
-//                 "class" : "Communist Party"
-//             })
-//         }, 1000);
-//     }
-//     return (
-//         <NoteContext.Provider value = {{state, update}}>
-//             {props.children}
-//         </NoteContext.Provider>
-//     )
-// };
-
-// export default NoteState;
-
 import { useState } from "react";
 import NoteContext from "./noteContext";
+import * as url  from "./urlhelper";
+
 
 const NoteState = (props) => {
-  const s1 = [
+  const note = [
     {
       "id": 1,
       "title": "Saurabh Pande",
@@ -58,31 +31,50 @@ const NoteState = (props) => {
 
   const addNote = (title, description, tag) =>
   {
-    console.log(`Adding a new node`);
     // TODO API CALL
     let note = {
       "id": 5,
-      "title": "Rishi Sunak",
-      "description": "First Hindu PM",
+      "title": title,
+      "description": description,
     }
     setNotes(notes.concat(note));
   }
 
   // Delete a Note
-  const deleteNode = () =>
+  const deleteNode = (id) =>
   {
+    console.log(`Deleing the node`, id);
+    const newNotes = notes.filter((note) => {return note.id !== id})
+    setNotes(newNotes)
   }
-
 
   // Edit a Note
-
-  const editNode = () =>
+  const editNode = async (id, title, description, tag) =>
   {
-
+    
+    const response = await fetch(url.PUT_EDIT_NOTE, {
+      method: "PUT", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(data), 
+    });
+    
+    for (let index = 0; index < notes.length; index++) 
+    {
+      const element = notes[index];
+      if(element.id === id)
+      {
+        element.title = title,
+        element.description = description,
+        element.tag = tag
+      }      
+    }
   }
 
 
-  const [notes, setNotes] = useState(s1);
+  const [notes, setNotes] = useState(note);
   return (
     <NoteContext.Provider value={{ notes, addNote, deleteNode, editNode }}>
       {props.children}
@@ -91,3 +83,5 @@ const NoteState = (props) => {
 };
 
 export default NoteState;
+
+

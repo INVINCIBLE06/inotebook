@@ -38,12 +38,14 @@ exports.signup = async (req, res) =>
             name : userCreated.name,
             email : userCreated.email,
             username : userCreated.username,
-            // password : userCreated.password,
             phone_no : userCreated.phone_no,
             date_of_birth : userCreated.date_of_birth,
         }
         console.log("User added"),
-        res.status(201).send({message : "User Added Successfully"}); // Response line
+        res.status(201).send
+        ({
+            message : "User Added Successfully"
+        }); 
     }
     catch(err)
     {

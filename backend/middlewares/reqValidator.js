@@ -1,5 +1,4 @@
-const { login } = require('../controllers/user.controller');
-const User = require('../models/User')
+const User = require('../models/User');
 
 exports.emailvalidation = async (req, res, next) => 
 {
@@ -77,7 +76,7 @@ exports.ValidateSignUpRequestBody = async (req, res, next) =>
                 message : "Email is not in correct format. Please write a email in correct form"
             }); 
         }
-        else if(!isValidPassword(req.body.password))
+        else if(isValidPassword(req.body.password) != true)
         {
             // console.log(!!isValidPassword(req.body.password)); 
             return res.status(400).send
@@ -85,7 +84,7 @@ exports.ValidateSignUpRequestBody = async (req, res, next) =>
                 message : "Failed ! Not a valid password. Password must be 8 to 12 character containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"
             });
         }
-        else if(!isValidContact_No(req.body.phone_no))
+        else if(isValidContact_No(req.body.phone_no) != true)
         {
             // console.log(!!isValidContact_No(req.body.contact_no)); 
             return res.status(400).send
@@ -93,15 +92,15 @@ exports.ValidateSignUpRequestBody = async (req, res, next) =>
                 message : "The contact number is not in the correct format"
             });
         }
-        else if(!isValidDateOfBirth(req.body.date_of_birth))
+        else if(isValidDateOfBirth(req.body.date_of_birth) != true)
         {
             // console.log(!!isValidDateOfBirth(req.body.date_of_birth));
             return res.status(400).send
             ({
                 message : "The date of birth is not valid. Please enter the enter in this format YYYY/MM/DD" 
             });
-        }
-        else if(!isValidUsername(req.body.username))
+        }        
+        else if(isValidUsername(req.body.username) != true)
         {
             // console.log(!!isValidUsername(req.body.username));
             return res.status(400).send
@@ -128,7 +127,6 @@ exports.checkValueEntered = (feildName, messageName) => (req, res, next) =>
 {
     if(!feildName)
     {
-        console.log(`${feildName} is not entered`);
         return res.json
         ({
             code : 400,
@@ -161,48 +159,33 @@ exports.noteBodyValidator = async (req, res, next) =>
     next();
 };
 
-// exports.checkDuplicateValue = (feild, value) => async (req, res, next) =>
-// {
-//     console.log(`Came`);
-//     console.log({ [feild]: value });
-//     let checkValue = await User.findOne({[feild] : value});
-//     console.log('Check Value: ', checkValue);
-
-//     if(checkValue.length != 0)
-//     {
-//         res.status(400).send
-//         ({
-//             code : 400,
-//             status : false,
-//             message : `${feild} is already present.`
-//         });
-//     }
-//     else
-//     {
-//         next();
-//     }
-// };
-
 exports.checkDuplicateValue = (field, value) => async (req, res, next) => {
-    try {
-        console.log('Came');
-        console.log({ [field]: value });
+    try
+    {
+        console.log(await User.findOne({ [field]: value }));
 
         let checkValue = await User.findOne({ [field]: value });
         console.log('Check Value: ', checkValue);
 
-        if (checkValue) {
-            return res.status(400).json({
+        if (checkValue)
+        {
+            return res.status(400).json
+            ({
                 code: 400,
                 status: false,
                 message: `${field} is already present.`
             });
-        } else {
+        } 
+        else
+        {
             next();
         }
-    } catch (error) {
+    }
+    catch (error)
+    {
         console.error('Error:', error); // Log the error for debugging
-        return res.status(500).json({
+        return res.status(500).json
+        ({
             code: 500,
             status: false,
             message: 'Internal Server Error'

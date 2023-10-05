@@ -3,15 +3,17 @@ require('dotenv').config(); // Comment: Loads environment variables from a .env 
 
 const connectToMongo = async () => 
 {
-    try
+    mongoose.connect(process.env.DBURI,
     {
-        await mongoose.connect(process.env.DBURI);
-        console.log("Connected to MongoDB successfully");
-    }
-    catch(error)
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    }).then(() => 
     {
-        console.error("Failed to connect to MongoDB:", error);
-    }
+        console.log('Connected to MongoDB');
+    }).catch((error) => 
+    {
+        console.error('Error connecting to MongoDB:', error);
+    });
 };
 
 module.exports = connectToMongo;

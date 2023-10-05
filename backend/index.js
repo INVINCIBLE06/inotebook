@@ -10,7 +10,6 @@ app.use('/auth', require('./routes/auth.route'));
 app.use('/notes', require('./routes/notes.route'));
 
 
-// require('../backend/routes/auth')(app);
 
 app.get('/', (req, res) =>
 {
