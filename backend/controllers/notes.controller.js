@@ -4,9 +4,7 @@ exports.getAllNotes = async (user, req, res, next) =>
 {
     try 
     {
-        // console.log(user);
         const notes = await Note.find({ user : user });
-        // console.log(notes);
         if(notes.length == 0)
         {
             console.log(`There are no notes available for this token now`);
@@ -48,12 +46,9 @@ exports.AddNewNote = async (userId, req, res, next) =>
     }  
     try
     {
-        // console.log(userId);
-        // console.log(reqObj);
         // The below line will be used for creating the new note
         const noteCreated = await Note.create(reqObj);
         // The response variable will have the data. Which will be displayed when the signup is successfully done
-        // console.log(`Note created: `, noteCreated);
         const response = 
         {
             user : noteCreated.user,
@@ -63,12 +58,11 @@ exports.AddNewNote = async (userId, req, res, next) =>
             created_at : noteCreated.created_At
         };
 
-        // console.log('Note Added');
         res.status(201).send
         ({
             message : "Note Added Successfully",
             notes : response 
-        }); // Response line
+        });
     }
     catch (error)
     {

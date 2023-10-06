@@ -82,7 +82,6 @@ exports.ValidateSignUpRequestBody = async (req, res, next) =>
         }
         else if(isValidContact_No(req.body.phone_no) != true)
         {
-            console.log('HERE: ', isValidContact_No(req.body.phone_no));
             // console.log(!!isValidContact_No(req.body.contact_no)); 
             return res.status(400).send
             ({

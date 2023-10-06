@@ -1,7 +1,10 @@
 const connectToMongo = require('../backend/configs/db.config');
 const express = require('express');
 const app = express();
+var cors = require('cors');
 connectToMongo();
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Use router.use() instead of express.use()

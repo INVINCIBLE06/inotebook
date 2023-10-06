@@ -61,8 +61,7 @@ exports.signup = async (req, res, next) =>
 exports.login = async (req, res) =>
 {
     const { username, email, phone_no, password } = req.body;
-    console.log(req.body);
-    let condition = null;
+     let condition = null;
     if(username)
     {
         condition = { username: username };
