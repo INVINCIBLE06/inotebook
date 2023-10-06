@@ -1,8 +1,8 @@
-let PORT = 3000;
+let PORT = process.env.PORT;
 
 const baseURL = `http://localhost:${PORT}`
 
-const note = '/note'
+const note = '/notes'
 const auth = '/auth'
 
 export const POST_ADD_NOTE = baseURL + note + `/AddNote`;
