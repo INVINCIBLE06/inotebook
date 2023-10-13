@@ -1,4 +1,5 @@
 const Note = require('../models/Notes');
+const { checkout } = require('../routes/notes.route');
 
 exports.getAllNotes = async (user, req, res, next) =>
 {
@@ -71,17 +72,14 @@ exports.AddNewNote = async (userId, req, res, next) =>
     }
 };
 
-
 exports.UpdateExistingNote = async (userId, req, res, next) =>
 {  
     try
     {
-        // console.log(req.body.id);
         // The below line will be used for creating the new note
-        const notePresent = await Note.findOne({ _id : req.body.id});
+        const notePresent = await Note.findOne({ _id : req.params.id});
 
-        // console.log(`Note Present: `, notePresent);
-        // The response variable will have the data. Which will be displayed when the signup is successfully done
+ q        // The response variable will have the data. Which will be displayed when the signup is successfully done
         if(notePresent.length = 0)
         {
            res.send
@@ -107,13 +105,12 @@ exports.UpdateExistingNote = async (userId, req, res, next) =>
     }
 };
 
-
 exports.deleteNote = async (userId, req, res, next) =>
 {
     try 
     {
         // console.log(req.body.id);
-        const notePresent = await Note.findOne({ _id : req.body.id});
+        const notePresent = await Note.findOne({ _id : req.params.id});
         // console.log(`Note details at the time of delete: `, notePresent);
         if(!notePresent)
         {
@@ -127,13 +124,25 @@ exports.deleteNote = async (userId, req, res, next) =>
         else
         {
             let checkNote = await notePresent.deleteOne();
-            
-            res.send
-            ({
-                code : 200,
-                status : false,
-                message : "Note is successfully deleted"
-            })
+            console.log(checkNote);
+            if(checkNote)
+            {
+                res.send
+                ({
+                    code : 200,
+                    status : false,
+                    message : "Note is successfully deleted"
+                });
+            }
+            else
+            {
+                res.send
+                ({
+                    code : 200,
+                    status : false,
+                    message : "Error while deleting the note"
+                })
+            }            
         }
         
     }
