@@ -79,7 +79,7 @@ exports.UpdateExistingNote = async (userId, req, res, next) =>
         // The below line will be used for creating the new note
         const notePresent = await Note.findOne({ _id : req.params.id});
 
- q        // The response variable will have the data. Which will be displayed when the signup is successfully done
+        // The response variable will have the data. Which will be displayed when the signup is successfully done
         if(notePresent.length = 0)
         {
            res.send

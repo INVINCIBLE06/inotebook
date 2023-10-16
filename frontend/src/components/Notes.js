@@ -25,7 +25,6 @@ const Notes = () => {
     console.log('Update the node...', note);
     editNode(note.id, note.etitle, note.edescription, note.etag)
     e.preventDefault();
-    // refClose.current.click()
   };
 
   const onChange = (e) => {
