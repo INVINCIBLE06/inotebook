@@ -61,7 +61,8 @@ exports.signup = async (req, res, next) =>
 exports.login = async (req, res) =>
 {
     const { username, email, phone_no, password } = req.body;
-     let condition = null;
+    let condition = null;
+    console.log(req.body);
     if(username)
     {
         condition = { username: username };
@@ -77,20 +78,17 @@ exports.login = async (req, res) =>
     else
     {
         return res.status(400).send
-        ({ 
+        ({
+            success : false,
             message: "Invalid login credentials" 
         });
     }
-
-    // console.log(condition);
-
-    const user = await User.findOne({ username : req.body.username });
-    // const user = await User.findOne({condition});
-
+    const user = await User.findOne(condition);
     if(!user)
     {
         return res.status(404).send
         ({
+            success : false,
             message : "User Not found"
         });
     }
@@ -101,8 +99,10 @@ exports.login = async (req, res) =>
      */
     // console.log("Here", user._id);
 
-    const data = {
-        user : {
+    const data = 
+    {
+        user : 
+        {
             id : user.id
         }
     }
@@ -113,6 +113,7 @@ exports.login = async (req, res) =>
     {
         return res.status(401).send 
         ({
+            success : false,
             message : "Invalid Password"
         });
     }
@@ -120,6 +121,7 @@ exports.login = async (req, res) =>
     {
         return res.status(200).send 
         ({
+            success : true,
             message : "Login Successfully Done",
             token : token
         });
