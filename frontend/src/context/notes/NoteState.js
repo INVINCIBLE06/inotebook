@@ -78,18 +78,17 @@ const NoteState = (props) =>
     });
 
     let newNotes = JSON.parse(JSON.stringify(notes));
-
     const json = await response.json();
     console.log(json);
     
     for (let index = 0; index < notes.length; index++) 
     {
       const element = await notes[index];
-      if(element.id === id)
+      if(element._id === id)
       {
-        newNotes[index].title = title;
-        newNotes[index].description = description;
-        newNotes[index].tag = tag;
+        newNotes[index].title = json.title;
+        newNotes[index].description = json.description;
+        newNotes[index].tag = json.tag;
       break;  
       }   
     }

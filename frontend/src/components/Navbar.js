@@ -3,10 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
     let location = useLocation();
-
-
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-light">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">iNotebook</Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,15 +22,14 @@ const Navbar = () => {
                     <form className="d-flex" role="search">
                         <Link className='btn btn-primary mx-1' to='/login' role='button'>Login</Link>
                         <Link className='btn btn-primary mx-1' to='/signup' role='button'>Signup</Link>
-                        <div className="form-check form-switch">
-                            <input className="form-check-input mb-2" type="checkbox" role="switch" id="flexSwitchCheckChecked" />
-                            <label className="form-check-label me-auto mb-2 mb-lg-2" htmlFor="flexSwitchCheckChecked">Darkmode</label>
-                        </div>
                     </form>
+                    <div className="form-check form-switch mb-2 mt-3 mx-1">
+                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" role="switch" />
+                    </div>
                 </div>
             </div>
         </nav>
     )
 }
 
-export default Navbar
+export default Navbar;

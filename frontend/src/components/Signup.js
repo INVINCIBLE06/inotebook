@@ -2,79 +2,97 @@ import React, { useState } from 'react'
 import * as url from "../context/notes/urlhelper";
 import { useNavigate } from 'react-router-dom';
 
-const Signup = () => {
+const Signup = (props) => {
 
     const [credentials, setCredentials] = useState({name: "", email: "", password: "", cpassword: "", username: "", phone_no: "", date_of_birth: "" });
+    const [showPassword, setShowPassword] = useState(false);
+    
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+    
     let navigate = useNavigate();
 
     const handleSubmit = async(e) =>
     {
         e.preventDefault();
-        const response = await fetch(url.POST_SIGNUP_USER,
-        {
+        const {name, email, username, password, phone_no, date_of_birth, cpassword} = credentials;
+        const response = await fetch(url.POST_SIGNUP_USER,{
             method: `POST`,
-            headers: 
-            {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({name : credentials.name, email: credentials.email, password : credentials.password, cpassword : credentials.cpassword, username: credentials.username, phone_no : credentials.phone_no, date_of_birth : credentials.date_of_birth})
+            headers: { "Content-Type": "application/json", },
+            body: JSON.stringify({name, email, username, phone_no, date_of_birth, password})
         });
-        const json = await response.json()
-        console.log(json);
-        if(json.success)
+        if(password !== cpassword)
         {
-            localStorage.setItem('token', json.authtoken);
-            navigate("/");
+            alert(`Please check Password and confirm password both are not same.`);
         }
         else
         {
-            alert(`Invalid Credentials`);
+            const json = await response.json();
+            if(json.code === 200)
+            {
+                localStorage.setItem(`token`, json.authtoken);
+                navigate("/");
+                props.showAlert(json.message, 'success')
+            }
+            else
+            {
+                props.showAlert(json.message, 'danger')
+            }
         }
     }
-
-    const onChange = (e) => {
-        setCredentials({ ...credentials, [e.target.name]: e.target.value })
-    }
-
+        const onChange = (e) => {
+            setCredentials({ ...credentials, [e.target.name]: e.target.value })
+        }
 
     return (
         <div className="container">
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className="container mx-2">
                     <div className="mb-3 mt-3">
                         <label htmlFor="email" className="form-label font-weight-bold">Email</label>
-                        <input type="email" className="form-control" id="email" name="email" onChange={onChange} value={credentials.email}  />
+                        <input type="email" className="form-control" id="email" name="email" onChange={onChange} value={credentials.email} required />
                         <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="name" className="form-label">Name</label>
-                        <input type="name" className="form-control" id="name" name="name" onChange={onChange} value={credentials.name}  />
+                        <input type="name" className="form-control" id="name" name="name" onChange={onChange} value={credentials.name} required />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="username" className="form-label">Username</label>
-                        <input type="username" className="form-control" id="username" name="username" onChange={onChange} value={credentials.username}  />
+                        <input type="username" className="form-control" id="username" name="username" onChange={onChange} value={credentials.username} required />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="password" className="form-label">Password</label>
-                        <input type="password" className="form-control" id="password" name="password" onChange={onChange} value={credentials.password}  />
+                        <div className="input-group">
+                            <input type={showPassword ? 'text' : 'password'} className="form-control" id="password" name="password" value={credentials.password} onChange={onChange} required />
+                            <button type="button" className="btn btn-outline-secondary" onClick={togglePasswordVisibility} >
+                                {showPassword ? 'Hide' : 'Show'}
+                            </button>
+                        </div>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="cpassword" className="form-label">Confirm Password</label>
-                        <input type="cpassword" className="form-control" id="cpassword" name="cpassword" onChange={onChange} value={credentials.cpassword}  />
+                        <div className="input-group">
+                            <input type={showPassword  ? 'text' : 'password'} className="form-control" id="cpassword" name="cpassword" value={credentials.cpassword} onChange={onChange} required />
+                            <button type="button" className="btn btn-outline-secondary" onClick={togglePasswordVisibility} >
+                                {showPassword ? 'Hide' : 'Show'}
+                            </button>
+                        </div>
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="phone" className="form-label">Phone Number</label>
-                        <input type="phone" className="form-control" id="phone" name="phone" onChange={onChange} value={credentials.phone_no}  />
+                        <label htmlFor="phone_no" className="form-label">Phone Number</label>
+                        <input type="tel" className="form-control" id="phone_no" name="phone_no" onChange={onChange} value={credentials.phone_no} required />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="dob" className="form-label">Date of Birth</label>
-                        <input type="date" className="form-control" id="dob" name="dob" onChange={onChange} value={credentials.date_of_birth}  />
+                        <label htmlFor="date_of_birth" className="form-label">Date of Birth</label>
+                        <input type="date" className="form-control" id="date_of_birth" name="date_of_birth" onChange={onChange} value={credentials.date_of_birth}  required />
                     </div>
-                    <button type="submit" className="btn btn-primary" >Submit</button>
+                    <button type="submit" className="btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>
     )
 }
 
-export default Signup
+export default Signup;

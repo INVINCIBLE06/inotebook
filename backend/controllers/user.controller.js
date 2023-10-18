@@ -41,6 +41,8 @@ exports.signup = async (req, res, next) =>
         }
         res.status(201).send
         ({
+            code : 200,
+            status : true,
             message : "User Added Successfully"
         }); 
     }
