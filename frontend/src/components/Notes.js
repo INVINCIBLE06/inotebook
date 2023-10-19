@@ -2,13 +2,22 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../context/notes/noteContext";
 import Noteitem from "./Noteitem";
 import AddNote from "./AddNote";
+import { useNavigate } from 'react-router-dom';
 
 const Notes = (props) => {
   const context = useContext(noteContext);
   const { notes, getNotes, editNode } = context;  
+  let navigate = useNavigate();
 
   useEffect(() => {
-    getNotes();
+    if(localStorage.getItem('token'))
+    {
+      getNotes();
+    }
+    else
+    {
+      navigate("/login");
+    }
   }, []); // Removed the eslint-disable-next-line, it's not needed.
 
   const ref = useRef(null);
@@ -79,7 +88,7 @@ const Notes = (props) => {
       <div className="row my-3">
         <h2>Your Notes</h2>
         <div className="container mx-2">
-          {notes.length === 0 && `No notes to display`}
+          {!notes || notes.length === 0 && `No notes to display`}
         </div>
         {notes?.map((note) => 
         {

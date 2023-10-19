@@ -17,7 +17,7 @@ const NoteState = (props) =>
       headers: 
       {
           "Content-Type": "application/json",
-          "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZjkwMzkwNGVlZWZlMDU4M2ZhMDNiIn0sImlhdCI6MTY5NjU2NzkwN30.121fzT1WXjFq5KZamC-UiZbB1vJvxEGZymaGOjGrPGg"
+          "auth-token": localStorage.getItem(`token`)
       }
     });
     const json = await response.json();
@@ -34,11 +34,12 @@ const NoteState = (props) =>
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZjkwMzkwNGVlZWZlMDU4M2ZhMDNiIn0sImlhdCI6MTY5NjU2NzkwN30.121fzT1WXjFq5KZamC-UiZbB1vJvxEGZymaGOjGrPGg"
+        "auth-token": localStorage.getItem(`token`)
       },
       body: JSON.stringify({title, description, tag})
     });
     const note = await response.json();
+    console.log(`note`, note);
     setNotes(notes.concat(note.notes));
   }
 
@@ -52,43 +53,42 @@ const NoteState = (props) =>
         method: 'DELETE',
         headers: {
           "Content-Type": "application/json",
-          "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZjkwMzkwNGVlZWZlMDU4M2ZhMDNiIn0sImlhdCI6MTY5NjU2NzkwN30.121fzT1WXjFq5KZamC-UiZbB1vJvxEGZymaGOjGrPGg"
+          "auth-token": localStorage.getItem(`token`)
         },
       });
       const json = await response.json();
       console.log(json);
-    // const newNotes = notes.filter((note) => {return note._id !== id})
-    // setNotes(newNotes);
+    const newNotes = notes.filter((note) => {return note._id !== id})
+    setNotes(newNotes);
   }
 
   // Edit a Note
   const editNode = async (id, title, description, tag) =>
   {
-    console.log(`Id: `, id);
     const response = await fetch(`${url.PUT_EDIT_NOTE}${id}`,
     {
       method: "PUT", // *GET, POST, PUT, DELETE, etc.
       headers:
       {
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZjkwMzkwNGVlZWZlMDU4M2ZhMDNiIn0sImlhdCI6MTY5NjU2NzkwN30.121fzT1WXjFq5KZamC-UiZbB1vJvxEGZymaGOjGrPGg" 
+        "auth-token": localStorage.getItem(`token`) 
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({title, description, tag}),
     });
 
     let newNotes = JSON.parse(JSON.stringify(notes));
-    const json = await response.json();
-    console.log(json);
+    // const json = await response.json();
+    // console.log(json);
     
     for (let index = 0; index < notes.length; index++) 
     {
       const element = await notes[index];
       if(element._id === id)
       {
-        newNotes[index].title = json.title;
-        newNotes[index].description = json.description;
-        newNotes[index].tag = json.tag;
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
       break;  
       }   
     }

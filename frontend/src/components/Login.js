@@ -29,7 +29,7 @@ const Login = (props) =>
         console.log(json);
         if(json.success)
         {
-            localStorage.setItem('token', json.authtoken);
+            localStorage.setItem('token', json.token);
             navigate("/");
             props.showAlert(json.message, 'success')
 
@@ -49,7 +49,8 @@ const Login = (props) =>
 
 
     return (
-        <div>
+        <div className='mt-2'>
+            <h2 className='my-2'>Login to continue to iNotebook</h2>
             <form onSubmit={handleSubmit}>
             <div className="container mx-2">
                 <div className="mb-3 mt-3">
